@@ -136,13 +136,12 @@ In the end it's just up to **you** to choose what grabber suits you and your nee
 ## <a id="enhancements"></a>🌟 〢 todo/enhancements
 
 ~~overlined~~ = on hold/not adding
-
+  
 - Self spread | Suggestion from [FuckingToasters](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/31)
 - Grab Chrome history | Suggestion from [TeteuXD2](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/300)
 - Grab Wifi passwords | Suggestion from [msr8](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/35)
 - ~~Metamask Priv Key and seed | Suggestion from [Snipeeeey](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/281)~~
 - Grab Minecraft accessToken | Suggestion from [p3tt3](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/248)
-- Grab hwid (for manual blacklisting) | Suggestion from [p3tt3](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/247)
 - Better Anti-vm/Anti-debug (check screen size?, more registery checks?, make the lists outbound?)
 - Exe builder (clean gui, toggable options, compress exe (file size <= 8mb), etc...)
 
