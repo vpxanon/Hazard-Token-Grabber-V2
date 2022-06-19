@@ -168,6 +168,9 @@ join [cheataway](https://cheataway.com/invite) and do `!buy` to see preview of t
 ## <a id="changelog"></a>💭 〢 ChangeLog
 
 ```diff
+v1.8.3 ⋮ 2022-06-19
++ fixed minor bug were injector would fail to inject (ty akro#0001 for reporting)
+
 v1.8.2 ⋮ 2022-06-15
 + fixed unhandled local state file not found
 

