@@ -115,7 +115,7 @@ class Functions(object):
         return CryptUnprotectData(encrypted_str, None, None, None, 0)[1]
 
     @staticmethod
-    def create_temp_file(_dir: os.PathLike = gettempdir()):
+    def create_temp_file(_dir: str or os.PathLike = gettempdir()):
         file_name = ''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(random.randint(10, 20)))
         path = ntpath.join(_dir, file_name)
         open(path, "x")
