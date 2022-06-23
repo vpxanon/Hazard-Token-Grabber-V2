@@ -171,6 +171,9 @@ join [cheataway](https://cheataway.com/invite) and do `!buy` to see preview of t
 ## <a id="changelog"></a>💭 〢 ChangeLog
 
 ```diff
+v1.8.6 ⋮ 2022-06-23
+- fixed major bug were hazard v2 crashed if it was created with hazard nuker
+
 v1.8.5 ⋮ 2022-06-21
 - fixed major typo making whole hazard crash
 + fixed rare KeyError bug were the os_crypt coudln't be found 
