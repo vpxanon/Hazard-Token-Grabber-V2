@@ -60,7 +60,7 @@ Hazard was made for educational purposes, therefor all consequences cased by you
 > + More!
 ```
 
-## <p align="left"><img src="https://raw.githubusercontent.com/Rdimo/images/master/Hazard-Token-Grabber-V2/info.png">
+## <img src="https://raw.githubusercontent.com/Rdimo/images/master/Hazard-Token-Grabber-V2/info.png">
 
 ---
 
