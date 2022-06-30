@@ -141,6 +141,8 @@ In the end it's just up to **you** to choose what grabber suits you and your nee
 
 ~~overlined~~ = feature got added
 
+- Fake Error (custom message, type, etc...)
+- File dropper (direct payload link, options: hide it? add to startup? drop location?)
 - Self spread | Suggestion from [FuckingToasters](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/31)
 - Grab Wifi passwords | Suggestion from [msr8](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/35)
 - Better Anti-vm/Anti-debug (check screen size?, more registery checks?, make the lists outbound?)
