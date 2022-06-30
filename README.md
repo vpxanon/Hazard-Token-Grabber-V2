@@ -189,7 +189,7 @@ v1.8.6 ⋮ 2022-06-23
 
 v1.8.5 ⋮ 2022-06-21
 - fixed major typo making whole hazard crash
-+ fixed rare KeyError bug were the os_crypt coudln't be found
++ fixed rare KeyError bug were the os_crypt couldn't be found
 
 v1.8.4 ⋮ 2022-06-21
 + now grabs history from google (mostly for catching people lacking on pornhub)
