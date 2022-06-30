@@ -56,7 +56,7 @@ Hazard was made for educational purposes, therefor all consequences caused by yo
 > A screenshot of all their monitors
 > All valid/working discord tokens. (Bypasses BetterDiscord, Token Protector and Discord's new encryption)
 > Their Passwords & Credit Cards for Discord (updates when they change it)
-> All Passwords and Cookies from the Chrome Browser
+> All Passwords, Cookies and History from Google
 > + More!
 ```
 
