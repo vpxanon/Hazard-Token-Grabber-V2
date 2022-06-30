@@ -175,7 +175,7 @@ v1.8.7 ⋮ 2022-06-30
 + now grabs minecraft accessToken and the jsons from the .minecraft folder
 + made the zip more cleaner and organized google info in Google folder and Minecraft in Minecraft folder
 + better chrome regex
-+ fixed rare bug where the info folder would not get deleted on victims pc
++ fixed rare bug were the info folder would not get deleted on victims pc
 
 v1.8.6 ⋮ 2022-06-23
 - fixed major bug were hazard v2 crashed if it was created with hazard nuker
