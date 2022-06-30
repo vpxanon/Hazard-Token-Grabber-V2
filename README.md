@@ -26,7 +26,7 @@ Love ❌ code ✅
 **NOTE:** \
 Hazard was made for educational purposes, therefor all consequences cased by your actions are **your** responsibility and accountability.
 
-> [Why Hazardv2 won't be more OP](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/314#issuecomment-1133918906) ┋[Want an ever better grabber?](#premium) ┋ [Why choose hazard v2?](#why_hazard)
+> [Why Hazardv2 won't be more OP](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/314#issuecomment-1133918906) ┋[Want an even better grabber?](#premium) ┋ [Why choose hazard v2?](#why_hazard)
 
 ---
 
