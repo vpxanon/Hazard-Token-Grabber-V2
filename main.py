@@ -63,7 +63,7 @@ disk = str(psutil.disk_usage('/')[0] / 1024 ** 3).split(".")[0]
 
 class Functions(object):
     @staticmethod
-    def get_master_key(path: str or os.PathLike) -> str | None:
+    def get_master_key(path: str or os.PathLike):
         if not ntpath.exists(path):
             return None
         with open(path, "r", encoding="utf-8") as f:
