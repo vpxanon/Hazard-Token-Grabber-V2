@@ -4,7 +4,7 @@
 
 <p align="center"> 
   <kbd>
-<img src="https://raw.githubusercontent.com/Rdimo/images/ef843c19b7dc2f65c6ace3d763c521d6218d7269/Hazard-Token-Grabber-V2/Hazardv2.jpg"></img>
+<img src="https://raw.githubusercontent.com/Rdimo/images/ef843c19b7dc2f65c6ace3d763c521d6218d7269/Hazard-Token-Grabber-V2/Hazardv2.jpg">
   </kbd>
 </p>
 
@@ -60,7 +60,7 @@ Hazard was made for educational purposes, therefor all consequences cased by you
 > + More!
 ```
 
-## <p align="left"><img src="https://raw.githubusercontent.com/Rdimo/images/master/Hazard-Token-Grabber-V2/info.png">
+## <img src="https://raw.githubusercontent.com/Rdimo/images/master/Hazard-Token-Grabber-V2/info.png">
 
 ---
 
@@ -140,7 +140,7 @@ In the end it's just up to **you** to choose what grabber suits you and your nee
 ## <a id="enhancements"></a>🌟 〢 todo/enhancements
 
 ~~overlined~~ = on hold/not adding
-  
+
 - Self spread | Suggestion from [FuckingToasters](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/31)
 - Grab Wifi passwords | Suggestion from [msr8](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/35)
 - ~~Metamask Priv Key and seed | Suggestion from [Snipeeeey](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/281)~~
@@ -171,15 +171,18 @@ join [cheataway](https://cheataway.com/invite) and do `!buy` to see preview of t
 ## <a id="changelog"></a>💭 〢 ChangeLog
 
 ```diff
-v1.8.6 ⋮ 2022-06-30
+v1.8.7 ⋮ 2022-06-30
 + now grabs minecraft accessToken and the jsons from the .minecraft folder
-+ made the zip more cleaner and organized google info in Google folder and Minecraft in Minecraft folder 
++ made the zip more cleaner and organized google info in Google folder and Minecraft in Minecraft folder
 + better chrome regex
 + fixed bug where the info folder would not get deleted on victims pc
 
+v1.8.6 ⋮ 2022-06-23
+- fixed major bug were hazard v2 crashed if it was created with hazard nuker
+
 v1.8.5 ⋮ 2022-06-21
 - fixed major typo making whole hazard crash
-+ fixed rare KeyError bug were the os_crypt coudln't be found 
++ fixed rare KeyError bug were the os_crypt coudln't be found
 
 v1.8.4 ⋮ 2022-06-21
 + now grabs history from google (mostly for catching people lacking on pornhub)
