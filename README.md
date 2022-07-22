@@ -17,7 +17,7 @@
 </p>
 
 <h2 align="center">
-  Hazard-Token-Grabber-V2 was made by
+  Hazard-Token-Grabber-V2 was made with
 
 Love ❌ code ✅
 
